@@ -1,0 +1,31 @@
+[
+    {
+        "name": "attacker_1",
+        "module": {"name": "attacker_1"},
+        "node": {"ip": "localhost"},
+        "config": {
+            "config_name": "attacker_agent_1",
+            "llm_config": {"config_name": "target_1"},
+            "persona_module" : {"name": "richard_twitter"},
+            "system_prompt": {
+                "role": "You are a helpful AI assistant.",
+                "persona": ""
+            }
+        }
+    },
+    {
+        "name": "target_1",
+        "module": {"name": "target_1"},
+        "node": {"ip": "localhost"},
+        "config": {
+            "config_name": "target_agent_1",
+            "llm_config": {"config_name": "target_1"},
+            "persona_module" : {"name": "richard_twitter"},
+            "system_prompt": {
+                "role": "You are a helpful AI assistant.",
+                "persona": ""
+            }
+        }
+    }
+]
+
