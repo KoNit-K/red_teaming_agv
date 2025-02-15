@@ -1,101 +1,65 @@
-# Hello World Agent
+# RedTeaming Simulation using Naptha SDK
 
-This is a simple agent that says "Hello World" when executed. You can check out other examples of agent, orchestrator and environment modules using the CLI commands with the [Naptha SDK](https://github.com/NapthaAI/naptha-sdk). 
+## Overview
+This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://naptha.io/)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities while the target agent defends.
 
-## Pre-Requisites 
+## Features
+- **Multi-Agent Simulation**: Implements attacker and target agents.
+- **Naptha SDK Integration**: Uses **[Naptha SDK](https://naptha.io/)** for agent management.
+- **Automated Red Teaming Rounds**: Simulates up to 10 rounds per attack session.
+- **Evaluation System**: Integrates an evaluator to determine if the attack was successful.
+- **Asynchronous Execution**: Utilizes `asyncio` for efficient execution.
 
-### Install the Naptha SDK and create .env
+## Installation
+### Prerequisites
+Ensure you have Python 3.8+ installed and the required dependencies:
 
-Install the Naptha SDK using the [instructions here](https://github.com/NapthaAI/naptha-sdk).
-
-### (Optional) Run your own Naptha Node
-
-You can run your own Naptha node using the [instructions here](https://github.com/NapthaAI/node) (still private, please reach out if you'd like access).
-
-### Set the environment variables
-
-Create a copy of the .env file:
-
-```bash
-cp .env.example .env
+```sh
+pip install -r requirements.txt
 ```
 
-Choose whether you want to interact with a local Naptha node or a hosted Naptha node. For a local node, set ```NODE_URL=http://localhost:7001``` in the .env file. To use a hosted node, set ```NODE_URL=http://node.naptha.ai:7001``` or ```NODE_URL=http://node1.naptha.ai:7001```. If using OpenAI, make sure to set the ```OPENAI_API_KEY``` environment variable.
+You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https://naptha.io/)** and obtain your API credentials.
 
-### Install Poetry 
+## Usage
+To start a Red Teaming attack simulation, run:
 
-From the official poetry [docs](https://python-poetry.org/docs/#installing-with-the-official-installer):
-
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-export PATH="/home/$(whoami)/.local/bin:$PATH"
+```sh
+python main.py --goal 0 --target target_1
 ```
 
-## Running the Module on a Naptha Node
+### Arguments
+| Argument | Type | Description |
+|----------|------|-------------|
+| `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) |
+| `--target` | str  | Target AI agent name |
 
-Using the Naptha SDK:
+## Architecture
+The project consists of the following key components:
+- **`main.py`**: Entry point for running simulations.
+- **`agent_instance.py`**: Handles agent interactions.
+- **`chat_agent.py`**: Implements a chat-based AI agent.
+- **`evaluator.py`**: Evaluates attack success.
+- **`schemas.py`**: Defines request/response schemas.
+- **`configs/`**: Contains deployment configurations.
 
-```bash
-naptha run agent:module_template -p "func_name='func', func_input_data='gm...'" 
-```
+## Naptha SDK Integration
+The system utilizes **[Naptha SDK](https://naptha.io/)** to manage AI agents. 
+### Key SDK Features Used:
+- `AgentRunInput`: Defines agent input structure.
+- `sign_consumer_id()`: Authenticates users.
+- `setup_module_deployment()`: Deploys agent models.
+- `ChatAgent`: Manages chat-based AI interactions.
+- `EvaluatorAgent`: Evaluates red teaming effectiveness.
 
-## Making Changes to the Module
+## License
+This project is licensed under the MIT License.
 
-Before deploying a new or updated module to a Naptha node, you should iterate on improvements with the module locally. 
+## Disclaimer
+This project is strictly for **security research and AI robustness evaluation**. It must **not** be used for any unethical or illegal activities.
 
-### Clone and Install the Module
+## Contributing
+We welcome contributions! Feel free to submit issues or pull requests.
 
-Clone the repo using:
+## Contact
+For questions or collaborations, reach out via [Naptha SDK Support](https://naptha.io/contact).
 
-```bash
-git clone https://github.com/NapthaAI/<module_name>
-cd <module_name>
-```
-
-You can install the module using:
-
-```bash
-poetry install
-```
-
-### Running the Module Locally
-
-You can run the module using:
-
-```bash
-poetry run python <module_name>/run.py
-```
-
-Now you can iterate on the module and commit your changes.
-
-## Register the new or updated Module on the Naptha Hub
-
-When ready, you can push to your GitHub account or IPFS (or both). Make sure to change the remote origin. Also add a new version number using e.g.:
-
-```bash
-git tag v0.1
-```
-
-```bash
-git push --tags
-```
-
-If creating an agent module, you can register it on the Naptha Hub using:
-
-```bash
-naptha agents agent_name -p "description='Agent description' url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg' type='package' version='0.1'" 
-```
-
-If creating an orchestrator module, you can register it on the Naptha Hub using:
-
-```bash
-naptha orchestrators orchestrator_name -p "description='Orchestrator description' url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg' type='package' version='0.1'" 
-```
-
-If creating an environment module, you can register it on the Naptha Hub using:
-
-```bash
-naptha environments environment_name -p "description='Environment description' url='ipfs://QmNer9SRKmJPv4Ae3vdVYo6eFjPcyJ8uZ2rRSYd3koT6jg' type='package' version='0.1'" 
-```
-
-Make sure to replace the placeholder descriptions and URLs with your own.
