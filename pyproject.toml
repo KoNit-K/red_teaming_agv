@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "hello-world-agent"
+name = "red-teaming agent"
 version = "0.1.0"
 description = ""
-authors = ["moarshy <marshath@gmail.com>"]
+authors = ["Konit <Konit.block@protonmail.com>"]
 readme = "README.md"
 packages = [
-    { include = "hello_world_agent", from = "." },
+    { include = "red_teaning", from = "." },
 ]
 
 [tool.poetry.dependencies]
