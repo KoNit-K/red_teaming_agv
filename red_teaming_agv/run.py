@@ -71,7 +71,6 @@ def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str,
         for response in responses:
             if response["role"] == "assistant":
                 reply = response["content"]
-                print("reply is------:", reply,"\n")
 
         if "sorry" not in reply:
             data = json.loads(reply)
@@ -82,8 +81,7 @@ def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str,
 
             command1 = generate_module_run("user", prompt_text, target_agent, consumer_id)
             responses = asyncio.run(run(command1))
-            if "sorry" in responses:
-                print(f"----{responses}")
+
             for response in responses:
                 if response["role"] == "assistant":
                     reply = response["content"]
