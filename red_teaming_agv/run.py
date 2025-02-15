@@ -15,6 +15,7 @@ from naptha_sdk.configs import setup_module_deployment
 from red_teaming_agv.agent_instance import generate_module_run
 from red_teaming_agv.chat_agent import ChatAgent
 from red_teaming_agv.common.Target import Target
+from red_teaming_agv.evaluator import EvaluatorAgent
 from red_teaming_agv.prompt import get_attacker_system_prompt
 from red_teaming_agv.schemas import InputSchema
 
@@ -22,11 +23,6 @@ logger = logging.getLogger(__name__)
 
 
 def reverse_roles(messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    """
-    角色反转：
-    - user -> assistant
-    - assistant -> user
-    """
     reversed_messages = []
     for msg in messages:
         if msg["role"] == "user":
@@ -40,9 +36,6 @@ def reverse_roles(messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
 
 async def invoke_agent(agent, consumer_id: str, messages: List[Dict[str, str]]) -> Optional[
     List[Dict[str, str]]]:
-    """
-    调用 agent 并返回对话更新
-    """
     agent_run_input = AgentRunInput(
         consumer_id=consumer_id,
         inputs={"tool_name": "chat", "tool_input_data": messages},
@@ -61,68 +54,46 @@ def get_response(module_run) -> str:
     response = asyncio.run(run(module_run))
     return response["choices"][0]["message"]["content"]
 
-def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str) -> List[Dict[str, str]]:
-    """
-    Red Teaming 多轮交互
-    """
+def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str) -> (List[str], List[str]):
     run_id = str(uuid.uuid4())
     logger.info(f"Starting RedTeaming session with run_id={run_id}.")
 
-    attacker_prompt = get_attacker_system_prompt(goal, target_str)
+    attacker_messages = []
+    target_messages = []
 
-    last_messages = None
-    # logger.info(f"[Round {round_num}] Attack Bot prompt => {attacker_prompt}")
-    command = generate_module_run("user", attacker_prompt, attacker_agent, consumer_id)
-    responses = asyncio.run(run(command))
-    for response in responses:
-        if response["role"] == "assistant":
-            reply = response["content"]
-    # 解析 JSON
-    data = json.loads(reply)
+    evaluator = EvaluatorAgent()
 
-    # 提取 "prompt" 的内容
-    prompt_text = data.get("prompt", "")
+    for round_num in range(10):
+        attacker_prompt = get_attacker_system_prompt(goal, target_str)
 
-    print(f"Attacker Agent: {prompt_text}")
+        command = generate_module_run("user", attacker_prompt, attacker_agent, consumer_id)
+        responses = asyncio.run(run(command))
+        for response in responses:
+            if response["role"] == "assistant":
+                reply = response["content"]
+                print("reply is------:", reply,"\n")
 
-    command1 = generate_module_run("user", prompt_text, target_agent, consumer_id)
-    responses = asyncio.run(run(command1))
-    for response in responses:
-        if response["role"] == "assistant":
-            reply = response["content"]
-    print(f"Target Agent: {reply}")
-    # print(f"Response type{type(reply)}, Response: {reply}")
-    # for round_num in range(5):  # 最多5轮对话
-    #     try:
-    #
-    #         print(f"\nresponse\n")
-    #         # updated_messages = await invoke_agent(attacker, consumer_id, attacker_prompt)
-    #         # if not updated_messages:
-    #         #     logger.warning(f"[Round {round_num}] Attack bot returned empty response.")
-    #         #     break
-    #         # messages = updated_messages
-    #         # messages = reverse_roles(messages)
-    #         #
-    #         # updated_messages = await invoke_agent(target, consumer_id, messages)
-    #         # if not updated_messages:
-    #         #     logger.warning(f"[Round {round_num}] Target bot returned empty response.")
-    #         #     break
-    #         # messages = updated_messages
-    #         #
-    #         # logger.info(f"[Round {round_num}] Target Bot responded => {messages[-1]['content']}")
-    #         #
-    #         # messages = reverse_roles(messages)
-    #         #
-    #         # if messages == last_messages:
-    #         #     logger.info(f"[Round {round_num}] Conversation repeated. Stopping early.")
-    #         #     break
-    #         # last_messages = messages
-    #
-    #     except Exception as e:
-    #         logger.exception(f"[Round {round_num}] Error in round: {e}")
-    #
-    # logger.info("RedTeaming session finished.")
-    return last_messages
+        if "sorry" not in reply:
+            data = json.loads(reply)
+
+            prompt_text = data.get("prompt", "")
+            attacker_message = f">>> Attacker Agent: \n{prompt_text}"
+            attacker_messages.append(attacker_message)
+
+            command1 = generate_module_run("user", prompt_text, target_agent, consumer_id)
+            responses = asyncio.run(run(command1))
+            if "sorry" in responses:
+                print(f"----{responses}")
+            for response in responses:
+                if response["role"] == "assistant":
+                    reply = response["content"]
+            target_message = f">>> Targeter Agent: \n{reply}"
+            target_messages.append(target_message)
+            if evaluator.evaluate(target_str,target_message):
+                print(f"----- Target Archived -----")
+                break
+
+    return attacker_messages, target_messages
 
 
 async def run(module_run: Dict, *args, **kwargs):
@@ -167,10 +138,9 @@ if __name__ == "__main__":
         setup_module_deployment("agent", "red_teaming_agv/configs/deployment.json", deployment_name="attacker_1",
                                 node_url=os.getenv("NODE_URL")))
 
+    (msg1, msg2) = run_red_teaming(naptha.user.id, attacker_agent, target_agent, goal, target_str)
 
-    messages = run_red_teaming(naptha.user.id, attacker_agent, target_agent, goal, target_str)
-
-    # print("==== Final Conversation ====")
-    # for i, msg in enumerate(messages):
-    #     print(f"{i + 1}. [{msg['role'].upper()}]: {msg['content']}")
-    # print("========== END ==========")
+    print("==== Conversation Replay ====")
+    for i, msg in enumerate(msg1):
+        print(f"\nRound {i + 1}:\n {msg1[i]},\n {msg2[i]}")
+    print("========== END ==========")
