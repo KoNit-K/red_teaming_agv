@@ -1,11 +1,11 @@
 # RedTeaming Simulation using Naptha SDK
 
 ## Overview
-This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://naptha.io/)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities while the target agent defends.
+This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities while the target agent defends.
 
 ## Features
 - **Multi-Agent Simulation**: Implements attacker and target agents.
-- **Naptha SDK Integration**: Uses **[Naptha SDK](https://naptha.io/)** for agent management.
+- **Naptha SDK Integration**: Uses **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** for agent management.
 - **Automated Red Teaming Rounds**: Simulates up to 10 rounds per attack session.
 - **Evaluation System**: Integrates an evaluator to determine if the attack was successful.
 - **Asynchronous Execution**: Utilizes `asyncio` for efficient execution.
@@ -18,7 +18,7 @@ Ensure you have Python 3.8+ installed and the required dependencies:
 pip install -r requirements.txt
 ```
 
-You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https://naptha.io/)** and obtain your API credentials.
+You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** and obtain your API credentials.
 
 ## Usage
 To start a Red Teaming attack simulation, run:
@@ -43,7 +43,7 @@ The project consists of the following key components:
 - **`configs/`**: Contains deployment configurations.
 
 ## Naptha SDK Integration
-The system utilizes **[Naptha SDK](https://naptha.io/)** to manage AI agents. 
+The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to manage AI agents. 
 ### Key SDK Features Used:
 - `AgentRunInput`: Defines agent input structure.
 - `sign_consumer_id()`: Authenticates users.
@@ -61,5 +61,5 @@ This project is strictly for **security research and AI robustness evaluation**.
 We welcome contributions! Feel free to submit issues or pull requests.
 
 ## Contact
-For questions or collaborations, reach out via [Naptha SDK Support](https://naptha.io/contact).
+For questions or collaborations, reach out via [team@naptha.ai](team@naptha.ai).
 
