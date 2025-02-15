@@ -1,11 +1,8 @@
 #!/usr/bin/env python
-from dotenv import load_dotenv
 import json
 import logging
-import os
 from red_teaming_agv.schemas import InputSchema, SystemPromptSchema
-from typing import Dict
-from naptha_sdk.schemas import AgentDeployment, AgentRunInput
+from naptha_sdk.schemas import AgentDeployment
 from naptha_sdk.inference import InferenceClient
 
 logger = logging.getLogger(__name__)
