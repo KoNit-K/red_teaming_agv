@@ -30,7 +30,7 @@ python main.py --goal 0 --target target_1
 ### Arguments
 | Argument | Type | Description |
 |----------|------|-------------|
-| `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) |
+| `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) (more will be added...) |
 | `--target` | str  | Target AI agent name |
 
 ## Architecture
