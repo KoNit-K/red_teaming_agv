@@ -51,7 +51,7 @@ cp .env.example .env
 
 ## 5. Let's Go!
 ```sh
-python run.py --goal 0 --target target_1
+poetry run python red_teaming_agv/run.py --goal 1 --target chatgpt
 ```
 
 ### Arguments
@@ -59,6 +59,46 @@ python run.py --goal 0 --target target_1
 |----------|------|-------------|
 | `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) |
 | `--target` | str  | Target AI agent name |
+
+
+# Deployment Guide for Local Testing Environment
+
+## Overview
+This guide provides instructions on setting up a local testing environment for running the Red Teaming Agent.
+
+## Prerequisites
+- Ensure you have Git installed.
+- A Unix-based environment (Linux/macOS) or Windows with WSL.
+
+## Setting Up the Local Node
+
+Follow these steps to clone and launch the required node:
+
+```sh
+git clone https://github.com/NapthaAI/naptha-node.git
+cd naptha-node
+bash launch.sh
+```
+
+If all checks are marked ✅ at the end of the execution, the local node is running successfully.
+
+## Configuring Red Teaming Agent
+
+Once the node is up and running, configure your Red Teaming Agent with the following settings in .env:
+
+```sh
+export NODE_URL=http://localhost:7001
+export HUB_URL=wss://hub.naptha.ai/rpc
+```
+
+Your local testing environment is now ready to use!
+
+## try with those command
+```sh
+poetry run python red_teaming_agv/run.py --goal 1 --target chatgpt
+
+```
+
 
 ## Architecture
 The project consists of the following key components:
