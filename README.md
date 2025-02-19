@@ -24,7 +24,7 @@ You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https:/
 To start a Red Teaming attack simulation, run:
 
 ```sh
-python main.py --goal 0 --target target_1
+python run.py --category government --goal 0 --target target
 ```
 
 ### Arguments
