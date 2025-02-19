@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import json
 import logging
-from red_teaming_agv.schemas import InputSchema, SystemPromptSchema
+from schemas import InputSchema, SystemPromptSchema
 from naptha_sdk.schemas import AgentDeployment
 from naptha_sdk.inference import InferenceClient
 

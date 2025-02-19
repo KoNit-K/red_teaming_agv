@@ -12,12 +12,18 @@ from naptha_sdk.modules.agent import Agent
 from naptha_sdk.schemas import AgentRunInput
 from naptha_sdk.user import sign_consumer_id
 
-from red_teaming_agv.agent_instance import generate_module_run
-from red_teaming_agv.chat_agent import ChatAgent
-from red_teaming_agv.common.Target import Target
-from red_teaming_agv.evaluator import EvaluatorAgent
-from red_teaming_agv.prompt import get_attacker_system_prompt
-from red_teaming_agv.schemas import InputSchema
+from agent_instance import generate_module_run
+from chat_agent import ChatAgent
+from common.Target import Target
+from prompt import get_attacker_system_prompt
+from schemas import InputSchema
+
+# OPT 2
+# from adv_eva import EvaluatorAgent
+
+# OPT 1
+from evaluator import EvaluatorAgent
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -126,7 +132,15 @@ def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str,
 
                 target_messages.append(f">>> Target Agent: \n{target_reply}")
 
+                # -----
+                # OPT 2
+                # Adv_Evaluator
+                # MetricResult = evaluator.evaluate_hallucination(target_str, target_reply)
+                # if MetricResult.passed:
+
+                # OPT 1
                 if evaluator.evaluate(target_str, target_reply):
+                # -----
                     logger.info("Target Achieved!")
                     break
             except json.JSONDecodeError as e:

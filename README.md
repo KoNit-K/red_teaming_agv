@@ -14,17 +14,44 @@ This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](h
 ### Prerequisites
 Ensure you have Python 3.8+ installed and the required dependencies:
 
+
+# Deployment Guide
+
+## 1. Set Up a Local Virtual Environment
+
+### Option 1: Using Poetry
 ```sh
-pip install -r requirements.txt
+poetry new test-env
+source .venv/bin/activate
 ```
 
-You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** and obtain your API credentials.
+### Option 2: Using an IDE's Built-in Virtual Environment
+For example, in **PyCharm**:
+1. Navigate to **Python Interpreter** → **Local Interpreter**
+2. Select **Python 3.8+**
+3. Activate the environment:
+   ```sh
+   source .venv/bin/activate
+   ```
 
-## Usage
-To start a Red Teaming attack simulation, run:
-
+## 2. Install Naptha SDK
 ```sh
-python main.py --goal 0 --target target_1
+pip install naptha-sdk
+```
+
+## 3. Install OpenAI Library
+```sh
+poetry add openai
+```
+
+## 4. Prepare the `.env` File
+```sh
+cp .env.example .env
+```
+
+## 5. Let's Go!
+```sh
+python run.py --goal 0 --target target_1
 ```
 
 ### Arguments
@@ -44,6 +71,7 @@ The project consists of the following key components:
 
 ## Naptha SDK Integration
 The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to manage AI agents. 
+
 ### Key SDK Features Used:
 - `AgentRunInput`: Defines agent input structure.
 - `sign_consumer_id()`: Authenticates users.

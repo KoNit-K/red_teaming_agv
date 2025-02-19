@@ -1,5 +1,4 @@
 
-
 class Attacker:
     # Attack strategies
     ATTACK_STRATEGIES = [
