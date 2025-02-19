@@ -31,7 +31,7 @@ python main.py --goal 0 --target target_1
 | Argument | Type | Description |
 |----------|------|-------------|
 | `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) (more will be added...) |
-| `--target` | str  | Target AI agent name |
+| `--target` | str  | Target AI agent name("chatgpt", "anthropic", "gemini") |
 
 ## Architecture
 The project consists of the following key components:
