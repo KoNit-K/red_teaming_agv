@@ -18,11 +18,7 @@ from common.Target import Target
 from prompt import get_attacker_system_prompt
 from schemas import InputSchema
 
-# OPT 2
 from adv_eva import EvaluatorAgent
-
-# OPT 1
-# from evaluator import EvaluatorAgent
 
 
 # Configure logging
@@ -106,8 +102,6 @@ async def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal
 
                 target_messages.append(f">>> Target Agent: \n{target_reply}")
 
-                # -----
-                # OPT 2
                 MetricResult = evaluator.evaluate_on_topic(target_str, target_reply)
                 if MetricResult.passed:
                     logger.info("Target Achieved!")
@@ -210,7 +204,6 @@ async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal
     """Run a single red teaming test."""
     print(f"\nTesting goal: {goal}")
 
-    # ✅ 修正：加上 await
     msg1, msg2 = await run_red_teaming(consumer_id, attacker, target, goal, target_str)
 
     print("\n==== Conversation Replay ====")
