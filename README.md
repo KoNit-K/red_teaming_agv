@@ -51,14 +51,18 @@ cp .env.example .env
 
 ## 5. Let's Go!
 ```sh
-poetry run python red_teaming_agv/run.py --goal 1 --target chatgpt
+poetry run python red_teaming_agv/run.py
 ```
 
-### Arguments
-| Argument | Type | Description |
-|----------|------|-------------|
-| `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) |
-| `--target` | str  | Target AI agent name |
+## 5. Try with different target 
+```sh
+category [category] --index [index] --target [target_agent]
+```
+such as: 
+```sh
+category government --index 0 --target chatgpt
+```
+
 
 
 # Deployment Guide for Local Testing Environment
@@ -95,7 +99,7 @@ Your local testing environment is now ready to use!
 
 ## try with those command
 ```sh
-poetry run python red_teaming_agv/run.py --goal 1 --target chatgpt
+poetry run python red_teaming_agv/run.py
 
 ```
 
