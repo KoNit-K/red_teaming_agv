@@ -89,7 +89,6 @@ async def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal
         attacker_prompt = get_attacker_system_prompt(goal, target_str)
         command = generate_module_run("user", attacker_prompt, attacker, consumer_id)
 
-        # ✅ 修正：改为 await，而不是 asyncio.run()
         responses = await run(command)
         reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
 
@@ -102,7 +101,6 @@ async def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal
 
                 command1 = generate_module_run("user", prompt_text, target, consumer_id)
 
-                # ✅ 修正：改为 await
                 responses = await run(command1)
                 target_reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
 
@@ -152,7 +150,6 @@ async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal
     """Run a single red teaming test."""
     print(f"\nTesting goal: {goal}")
 
-    # ✅ 修正：加上 await
     msg1, msg2 = await run_red_teaming(consumer_id, attacker, target, goal, target_str)
 
     print("\n==== Conversation Replay ====")
@@ -269,7 +266,6 @@ if __name__ == "__main__":
             print("\nTest completed. You can run another test or type 'quit' to exit.")
 
 
-    # Single asyncio.run() call at the top level
     asyncio.run(main())
 #
 # if __name__ == "__main__":
