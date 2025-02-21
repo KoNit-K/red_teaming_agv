@@ -14,25 +14,96 @@ This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](h
 ### Prerequisites
 Ensure you have Python 3.8+ installed and the required dependencies:
 
+
+# Deployment Guide
+
+## 1. Set Up a Local Virtual Environment
+
+### Option 1: Using Poetry
 ```sh
-pip install -r requirements.txt
+poetry new test-env
+source .venv/bin/activate
 ```
 
-You will also need a valid Naptha SDK account. Sign up at **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** and obtain your API credentials.
+### Option 2: Using an IDE's Built-in Virtual Environment
+For example, in **PyCharm**:
+1. Navigate to **Python Interpreter** → **Local Interpreter**
+2. Select **Python 3.8+**
+3. Activate the environment:
+   ```sh
+   source .venv/bin/activate
+   ```
 
-## Usage
-To start a Red Teaming attack simulation, run:
-
+## 2. Install Naptha SDK
 ```sh
-python run.py --category government --goal 0 --target target
+pip install naptha-sdk
 ```
 
-### Arguments
-| Argument | Type | Description |
-|----------|------|-------------|
-| `--category` | str | Red-teaming goal category |        
-| `--goal` | int  | Attack goal (0: Bomb-making, 1: Software key retrieval) (more will be added...) |
-| `--target` | str  | Target AI agent name("chatgpt", "anthropic", "gemini") |
+## 3. Install OpenAI Library
+```sh
+poetry add openai
+```
+
+## 4. Prepare the `.env` File
+```sh
+cp .env.example .env
+```
+
+## 5. Let's Go!
+```sh
+poetry run python red_teaming_agv/run.py
+```
+
+## 5. Try with different target 
+```sh
+category [category] --index [index] --target [target_agent]
+```
+such as: 
+```sh
+category financial --index 0 --target chatgpt
+```
+
+
+
+# Deployment Guide for Local Testing Environment
+
+## Overview
+This guide provides instructions on setting up a local testing environment for running the Red Teaming Agent.
+
+## Prerequisites
+- Ensure you have Git installed.
+- A Unix-based environment (Linux/macOS) or Windows with WSL.
+
+## Setting Up the Local Node
+
+Follow these steps to clone and launch the required node:
+
+```sh
+git clone https://github.com/NapthaAI/naptha-node.git
+cd naptha-node
+bash launch.sh
+```
+
+If all checks are marked ✅ at the end of the execution, the local node is running successfully.
+
+## Configuring Red Teaming Agent
+
+Once the node is up and running, configure your Red Teaming Agent with the following settings in .env:
+
+```sh
+export NODE_URL=http://localhost:7001
+export HUB_URL=wss://hub.naptha.ai/rpc
+```
+
+Your local testing environment is now ready to use!
+
+## try with those command
+```sh
+poetry run python red_teaming_agv/run.py
+
+```
+
+
 
 ## Architecture
 The project consists of the following key components:
@@ -45,6 +116,7 @@ The project consists of the following key components:
 
 ## Naptha SDK Integration
 The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to manage AI agents. 
+
 ### Key SDK Features Used:
 - `AgentRunInput`: Defines agent input structure.
 - `sign_consumer_id()`: Authenticates users.
