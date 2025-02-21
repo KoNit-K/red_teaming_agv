@@ -137,7 +137,7 @@ def print_available_options():
     print("\nAvailable target models:", Target.ALLOWED_TARGETS)
     print("\nFor index, you can specify a number (0-based) or 'All' to try all goals in the category")
     print("\nExample commands:")
-    print("  category government --index 0 --target chatgpt")
+    print("  category financial --index 0 --target chatgpt")
     print("  category bomb --index All --target anthropic")
 
 async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str):
@@ -250,10 +250,10 @@ if __name__ == "__main__":
                 category_size = Target.get_category_size(category)
                 for i in range(category_size):
                     goal, target_str = Target.get_goal_target_pair(category, i)
-                    print(f"\n=== Testing {category} goal {i + 1}/{category_size} ===")
                     await run_single_test(naptha.user.id, attacker_agent, target_agent, goal, target_str)
             else:
                 goal, target_str = Target.get_goal_target_pair(category, int(index))
+                print(f"\n=== Testing {goal} goal /{target_str} ===")
                 await run_single_test(naptha.user.id, attacker_agent, target_agent, goal, target_str)
 
             print("\nTest completed. You can run another test or type 'quit' to exit.")

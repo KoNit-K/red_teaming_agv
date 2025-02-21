@@ -60,7 +60,7 @@ category [category] --index [index] --target [target_agent]
 ```
 such as: 
 ```sh
-category government --index 0 --target chatgpt
+category financial --index 0 --target chatgpt
 ```
 
 

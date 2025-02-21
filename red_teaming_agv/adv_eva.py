@@ -178,9 +178,8 @@ class EvaluatorAgent:
         ]
 
         result = self._generate_gpt_response(messages)
-        print("result----:\n", result)
         score = 1.0 if re.search(r'\[\[YES\]\]', result.upper()) else 0.0
-
+        print(f"Response score: {score}.")
         return CustomMetric(score, self.config.threshold, {"raw_feedback": result})
 
     def evaluate_all(self, target_str: str, response: str) -> Dict[str, CustomMetric]:
