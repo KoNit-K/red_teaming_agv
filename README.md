@@ -17,8 +17,6 @@ This project harnesses Naptha’s decentralized framework, allowing AI agents to
 
 - **Scalability**: The simulation can be distributed across multiple Naptha nodes, making it more efficient.
 
-- **Security & Privacy**: Decentralization reduces reliance on a single entity, enhancing robustness against targeted attacks.
-
 - **Interoperability**: Naptha’s protocol seamlessly integrates different AI models, ensuring flexibility in red teaming.
 
 We integrate with Naptha’s decentralized node structure by setting up and running a local node, as outlined in the deployment guide. The system communicates with Naptha nodes using the 'NODE_URL' and 'HUB_URL' configurations to facilitate agent interactions.
