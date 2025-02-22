@@ -211,7 +211,7 @@ We will also share our major updates and research on AI safety and mechanisms th
 - `EvaluatorAgent`: Evaluates red teaming effectiveness.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the Apache-2.0 License.
 
 ## Disclaimer
 This project is strictly for **security research and AI robustness evaluation**. It must **not** be used for any unethical or illegal activities.
