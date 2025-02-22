@@ -25,9 +25,11 @@ With **Naptha**’s decentralized execution model, this system can scale across 
 ### Naptha SDK – AI Agent Management
 The Naptha SDK provides a modular framework for deploying and managing AI agents in a decentralized environment. This project integrates it to:
 
-- Deploy attacker and target agents using setup_module_deployment().
-- Authenticate API interactions via sign_consumer_id().
-- Handle AI-generated responses asynchronously with AgentRunInput().
+- `AgentRunInput`: Defines agent input structure.
+- `sign_consumer_id()`: Authenticates users.
+- `setup_module_deployment()`: Deploys agent models.
+- `ChatAgent`: Manages chat-based AI interactions.
+- `EvaluatorAgent`: Evaluates red teaming effectiveness.
 
 ### Naptha Node – Decentralized Execution
 To enhance scalability and security, this system is designed to run on Naptha nodes rather than a single machine. The node network ensures:
@@ -203,12 +205,7 @@ The project consists of the following key components:
 
 We will also share our major updates and research on AI safety and mechanisms there. For the next version of the auto-red teaming project, we will focus on building a more robust automatic evaluation system so that collaborative (attacker's co-pilot) and adversarial (evaluator's reviewer) agents can emerge to help improve the success rate and efficiency of attacker agents.
 
-### Key SDK Features Used:
-- `AgentRunInput`: Defines agent input structure.
-- `sign_consumer_id()`: Authenticates users.
-- `setup_module_deployment()`: Deploys agent models.
-- `ChatAgent`: Manages chat-based AI interactions.
-- `EvaluatorAgent`: Evaluates red teaming effectiveness.
+
 
 ## License
 This project is licensed under the Apache-2.0 License.
