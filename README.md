@@ -177,7 +177,7 @@ The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to 
 
 ## Progress & Roadmap
 
-## ✅ Done
+### ✅ Done
 
 - Developed multi-agent simulation framework.
 
