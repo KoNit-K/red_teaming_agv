@@ -227,9 +227,9 @@ We acknowledge the contributions of the research community in advancing the unde
 
 Chao, P., et al. (2023). **Jailbreaking Black-Box Large Language Models in Twenty Queries.** arXiv preprint arXiv:2310.08419. https://arxiv.org/abs/2310.08419
 
-Deshpande, Ameet, et al.**Toxicity in chatgpt: Analyzing persona-assigned language models.** arXiv preprint arXiv:2304.05335 (2023).
+Deshpande, Ameet, et al.**Toxicity in chatgpt: Analyzing persona-assigned language models.** arXiv preprint arXiv:2304.05335 (2023). https://arxiv.org/abs/2304.05335
 
-Ebrahimi, Javid, et al. **Hotflip: White-box adversarial examples for text classification.** arXiv preprint arXiv:1712.06751 (2017).
+Ebrahimi, Javid, et al. **Hotflip: White-box adversarial examples for text classification.** arXiv preprint arXiv:1712.06751 (2017). https://arxiv.org/abs/1712.06751
 
 Mehrotra, A., et al. (2025). **Tree of Attacks: Jailbreaking Black-Box LLMs Automatically.** Advances in Neural Information Processing Systems, 37, 61065-61105.
 
