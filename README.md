@@ -12,7 +12,11 @@ With **Naptha**’s decentralized execution model, this system can scale across 
 
 ✅ **Adversarial Feedback Loop**: Attack prompts are refined across up to 10 iterations to optimize success rates.
 
-✅ **Asynchronous Execution**: Designed for efficiency using Python’s `asyncio`.
+✅ **Decentralized Asynchronous Execution**: Built on Naptha’s distributed framework, this system utilizes Python’s 'asyncio' to efficiently manage AI-agent interactions across multiple Naptha nodes. Instead of running computations sequentially on a single machine, the Attacker, Target, and Evaluator agents operate in parallel across decentralized nodes, ensuring:
+
+Scalable execution of adversarial testing across different AI models.
+Non-blocking task management, allowing multiple attack iterations without bottlenecks.
+Seamless agent-to-agent communication over Naptha’s RPC-based node infrastructure.
 
 ✅ **Configurable LLM Backends**: Supports GPT-4o, Hermes3:8B, and Ollama models for diverse attack evaluations.
 
