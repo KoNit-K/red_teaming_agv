@@ -49,6 +49,7 @@ This system follows a multi-step attack-evaluation cycle, refining adversarial p
 - If the response complies with safety constraints, the attack fails.
 
 **3️⃣ Automated Attack Refinement**
+
 The Evaluator Agent analyzes the response using:
 - Subset matching (checks if restricted content is leaked).
 
