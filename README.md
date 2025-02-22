@@ -72,8 +72,6 @@ A new adversarial prompt is generated based on this evaluation.
 
 
 
-
-
 ## Installation
 ### Prerequisites
 Ensure you have Python 3.8+ installed and the required dependencies:
