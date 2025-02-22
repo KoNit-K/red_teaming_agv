@@ -97,7 +97,7 @@ export NODE_URL=http://localhost:7001
 export HUB_URL=wss://hub.naptha.ai/rpc
 ```
 
-Your local testing environment is now ready to use!
+Your local testing environment is now ready to use! Run with the command below.
 
 
 ```sh
@@ -112,7 +112,7 @@ The project consists of the following key components:
 - **`run.py`**: Entry point for running simulations.
 - **`agent_instance.py`**: Handles agent interactions.
 - **`chat_agent.py`**: Implements a chat-based AI agent.
-- **`evaluator.py`**: Evaluates attack success.
+- **`adv_eva.py`**: Evaluator that assesses attack and suggests modifications.
 - **`schemas.py`**: Defines request/response schemas.
 - **`configs/`**: Contains deployment configurations.
 
