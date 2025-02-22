@@ -16,14 +16,30 @@ With **Naptha**’s decentralized execution model, this system can scale across 
 
 ✅ **Configurable LLM Backends**: Supports GPT-4o, Hermes3:8B, and Ollama models for diverse attack evaluations.
 
-## Leveraging Naptha’s Decentralized Nature
-This project harnesses Naptha’s decentralized framework, allowing AI agents to be deployed and executed across a network of nodes instead of relying on a single centralized system. The key advantages include:
+## Naptha SDK & Node Integration
 
-- **Scalability**: The simulation can be distributed across multiple Naptha nodes, making it more efficient.
+### Naptha SDK – AI Agent Management
+The Naptha SDK provides a modular framework for deploying and managing AI agents in a decentralized environment. This project integrates it to:
 
-- **Interoperability**: Naptha’s protocol seamlessly integrates different AI models, ensuring flexibility in red teaming.
+- Deploy attacker and target agents using setup_module_deployment().
+- Authenticate API interactions via sign_consumer_id().
+- Handle AI-generated responses asynchronously with AgentRunInput().
 
-We integrate with Naptha’s decentralized node structure by setting up and running a local node, as outlined in the deployment guide. The system communicates with Naptha nodes using the 'NODE_URL' and 'HUB_URL' configurations to facilitate agent interactions.
+### Naptha Node – Decentralized Execution
+To enhance scalability and security, this system is designed to run on Naptha nodes rather than a single machine. The node network ensures:
+
+- Decentralized execution of red-teaming simulations.
+- Flexible AI model hosting, with configurations stored in deployment.json.
+- Efficient AI-agent communication managed via 'NODE_URL' and 'HUB_URL':
+```sh
+export NODE_URL=http://localhost:7001  
+export HUB_URL=wss://hub.naptha.ai/rpc  
+```
+
+
+
+
+
 
 ## Installation
 ### Prerequisites
