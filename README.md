@@ -154,8 +154,6 @@ The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to 
 
 - Expand attack categories and test cases.
 
-Share major updates and research insights in AI safety mechanisms.
-
 We will also share our major updates and research on AI safety and mechanisms there. For the next version of the auto-red teaming project, we will focus on building a more robust automatic evaluation system so that collaborative (attacker's co-pilot) and adversarial (evaluator's reviewer) agents can emerge to help improve the success rate and efficiency of attacker agents.
 
 ### Key SDK Features Used:
