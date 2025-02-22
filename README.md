@@ -12,6 +12,17 @@ This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](h
 - **Evaluation System**: Integrates an evaluator to determine if the attack was successful.
 - **Asynchronous Execution**: Utilizes `asyncio` for efficient execution.
 
+## Leveraging Naptha’s Decentralized Nature
+This project harnesses Naptha’s decentralized framework, allowing AI agents to be deployed and executed across a network of nodes instead of relying on a single centralized system. The key advantages include:
+
+- **Scalability**: The simulation can be distributed across multiple Naptha nodes, making it more efficient.
+
+- **Security & Privacy**: Decentralization reduces reliance on a single entity, enhancing robustness against targeted attacks.
+
+Interoperability: Naptha’s protocol seamlessly integrates different AI models, ensuring flexibility in red teaming.
+
+We integrate with Naptha’s decentralized node structure by setting up and running a local node, as outlined in the deployment guide. The system communicates with Naptha nodes using the NODE_URL and HUB_URL configurations to facilitate agent interactions.
+
 ## Installation
 ### Prerequisites
 Ensure you have Python 3.8+ installed and the required dependencies:
