@@ -1,7 +1,7 @@
 # RedTeaming Simulation using Naptha SDK
 
 ## Overview
-This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities while the target agent defends.
+This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities by asking the target agent to respond to detrimental content. In addition to the two agents above, for each round of attack, we employ an **evaluator** agent to assess the attack prompt to guide the attacker for a more well-designed strategy.
 
 ## Features
 - **Multi-Agent Simulation**: Implements attacker and target agents.
