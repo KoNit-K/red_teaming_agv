@@ -130,6 +130,34 @@ The project consists of the following key components:
 ## Naptha SDK Integration
 The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to manage AI agents. 
 
+## Progress & Roadmap
+
+## ✅ Done
+
+- Developed multi-agent simulation framework.
+
+- Integrated Naptha SDK for agent management.
+
+- Implemented attack-evaluation feedback loop.
+
+- Deployed local Naptha node for testing.
+
+- Automated attack rounds up to 10 iterations.
+
+## 🚀 To-Do
+
+- Improve auto-evaluation mechanism for attacks.
+
+- Introduce collaborative agents (attacker's co-pilot) to optimize strategies.
+
+- Enhance the adversarial evaluator’s reviewer for better countermeasures.
+
+- Expand attack categories and test cases.
+
+Share major updates and research insights in AI safety mechanisms.
+
+We will also share our major updates and research on AI safety and mechanisms there. For the next version of the auto-red teaming project, we will focus on building a more robust automatic evaluation system so that collaborative (attacker's co-pilot) and adversarial (evaluator's reviewer) agents can emerge to help improve the success rate and efficiency of attacker agents.
+
 ### Key SDK Features Used:
 - `AgentRunInput`: Defines agent input structure.
 - `sign_consumer_id()`: Authenticates users.
