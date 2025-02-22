@@ -1,16 +1,16 @@
 # RedTeaming Simulation using Naptha SDK
 
 ## Overview
-This project is a **Red Teaming AI Simulation** built using the **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)**. The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities by asking the target agent to respond to detrimental content. In addition to the two agents above, for each round of attack, we employ an **evaluator agent** to assess the attack prompt to guide the attacker for a more well-designed strategy in the next round. In most cases, our **attacker agent** successfully jailbreaks the **target agent** in less than 10 rounds of attack.
+This project is a **Automatic Red-Teaming Framework** built using the **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)**.  The goal is to simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms. The system involves an **attacker agent** and a **target agent**, where the attacker attempts to exploit vulnerabilities by asking the target agent to respond to detrimental content. In addition to the two agents above, for each round of attack, we employ an **evaluator agent** to assess the attack prompt to guide the attacker for a more well-designed strategy in the next round. In most cases, our **attacker agent** successfully jailbreaks the **target agent** in less than 10 rounds of attack.
+With **Naptha**’s decentralized execution model, this system can scale across distributed nodes, offering a **highly modular and extensible testing environment**.
 
 
-
-## Features
-- **Multi-Agent Simulation**: Implements attacker and target agents.
-- **Naptha SDK Integration**: Uses **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** for agent management.
-- **Automated Red Teaming Rounds**: Simulates up to 10 rounds per attack session.
-- **Evaluation System**: Integrates an evaluator to determine if the attack was successful.
-- **Asynchronous Execution**: Utilizes `asyncio` for efficient execution.
+## Key Features
+✅ **Multi-Agent Red Teaming**: Attacker, Target, and Evaluator agents operate autonomously.
+✅ **Naptha SDK Integration**: Enables modular AI model deployment and decentralized execution.
+✅ **Adversarial Feedback Loop**: Attack prompts are refined across up to 10 iterations to optimize success rates.
+✅ **Asynchronous Execution**: Designed for efficiency using Python’s 'asyncio'.
+✅ **Configurable LLM Backends**: Supports GPT-4o, Hermes3:8B, and Ollama models for diverse attack evaluations.
 
 ## Leveraging Naptha’s Decentralized Nature
 This project harnesses Naptha’s decentralized framework, allowing AI agents to be deployed and executed across a network of nodes instead of relying on a single centralized system. The key advantages include:
