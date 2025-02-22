@@ -35,7 +35,33 @@ To enhance scalability and security, this system is designed to run on Naptha no
    export NODE_URL=http://localhost:7001  
    export HUB_URL=wss://hub.naptha.ai/rpc  
    ```
+## Adversarial Red Teaming Process
+This system follows a multi-step attack-evaluation cycle, refining adversarial prompts dynamically to bypass AI model safety mechanisms.
 
+**1️⃣ Attack Initialization**
+- Users specify a target category (e.g., misinformation, fraud, cybersecurity).
+
+- The Attacker Agent generates an initial adversarial prompt.
+
+**2️⃣ Attack Execution**
+The Target AI model processes the prompt and generates a response.
+
+If the response complies with safety constraints, the attack fails.
+
+**3️⃣ Automated Attack Refinement**
+The Evaluator Agent analyzes the response using:
+-Subset matching (checks if restricted content is leaked).
+
+-Hallucination detection (evaluates factual consistency).
+
+-On-topic scoring (measures adversarial effectiveness).
+
+A new adversarial prompt is generated based on this evaluation.
+
+**4️⃣ Multi-Round Optimization**
+-The attack process repeats across up to 10 iterations, dynamically improving the attacker’s approach.
+
+-The system stops if the AI model is successfully jailbroken.
 
 
 
