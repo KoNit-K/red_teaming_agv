@@ -98,27 +98,20 @@ For example, in **PyCharm**:
    source .venv/bin/activate
    ```
 
-## 2. Install Naptha SDK
+## 2. Install Dependencies
 ```sh
 pip install naptha-sdk
+poetry add openai  
+cp .env.example .env 
 ```
 
-## 3. Install OpenAI Library
-```sh
-poetry add openai
-```
 
-## 4. Prepare the `.env` File
-```sh
-cp .env.example .env
-```
-
-## 5. Let's Go!
+## 3. Run the Red Teaming Simulation
 ```sh
 poetry run python red_teaming_agv/run.py
 ```
 
-## 5. Try with different target 
+## 4. Run with Different Target 
 ```sh
 category [category] --index [index] --target [target_agent]
 ```
