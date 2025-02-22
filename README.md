@@ -36,7 +36,7 @@ To enhance scalability and security, this system is designed to run on Naptha no
 
 - Decentralized execution of red-teaming simulations.
 - Flexible AI model hosting, with configurations stored in deployment.json.
-- Efficient AI-agent communication managed via 'NODE_URL' and 'HUB_URL':
+- Efficient AI-agent communication managed via `NODE_URL` and `HUB_URL`:
    ```sh
    export NODE_URL=http://localhost:7001  
    export HUB_URL=wss://hub.naptha.ai/rpc  
