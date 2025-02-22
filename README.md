@@ -7,9 +7,13 @@ With **Naptha**’s decentralized execution model, this system can scale across 
 
 ## Key Features
 ✅ **Multi-Agent Red Teaming**: Attacker, Target, and Evaluator agents operate autonomously.
+
 ✅ **Naptha SDK Integration**: Enables modular AI model deployment and decentralized execution.
+
 ✅ **Adversarial Feedback Loop**: Attack prompts are refined across up to 10 iterations to optimize success rates.
+
 ✅ **Asynchronous Execution**: Designed for efficiency using Python’s 'asyncio'.
+
 ✅ **Configurable LLM Backends**: Supports GPT-4o, Hermes3:8B, and Ollama models for diverse attack evaluations.
 
 ## Leveraging Naptha’s Decentralized Nature
