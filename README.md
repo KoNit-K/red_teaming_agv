@@ -72,12 +72,11 @@ A new adversarial prompt is generated based on this evaluation.
 
 
 
-## Installation
-### Prerequisites
-Ensure you have Python 3.8+ installed and the required dependencies:
-
 
 # Deployment Guide
+
+## 0. Prerequisites
+Ensure you have Python 3.8+ installed and the required dependencies:
 
 ## 1. Set Up a Local Virtual Environment
 
