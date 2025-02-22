@@ -224,3 +224,12 @@ We welcome contributions! Feel free to submit issues or pull requests.
 ## Contact
 For questions or collaborations, reach out via [team@naptha.ai](team@naptha.ai).
 
+## 📚 References
+Zhang, W., Zang, C., & Kainz, B. (2024). **Truth or Deceit? A Bayesian Decoding Game Enhances Consistency and Reliability.** arXiv preprint arXiv:2410.01064. https://arxiv.org/abs/2410.01064
+
+Mehrotra, A., et al. (2025). **Tree of Attacks: Jailbreaking Black-Box LLMs Automatically.** Advances in Neural Information Processing Systems, 37, 61065-61105.
+
+Chao, P., et al. (2023). **Jailbreaking Black-Box Large Language Models in Twenty Queries.** arXiv preprint arXiv:2310.08419. https://arxiv.org/abs/2310.08419
+
+Let me know if you need a different formatting style (e.g., APA, IEEE, Chicago).
+
