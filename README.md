@@ -12,7 +12,7 @@ With **Naptha**’s decentralized execution model, this system can scale across 
 
 ✅ **Adversarial Feedback Loop**: Attack prompts are refined across up to 10 iterations to optimize success rates.
 
-✅ **Asynchronous Execution**: Designed for efficiency using Python’s 'asyncio'.
+✅ **Asynchronous Execution**: Designed for efficiency using Python’s `asyncio`.
 
 ✅ **Configurable LLM Backends**: Supports GPT-4o, Hermes3:8B, and Ollama models for diverse attack evaluations.
 
