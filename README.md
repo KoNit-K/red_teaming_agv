@@ -176,8 +176,6 @@ The project consists of the following key components:
 - **`schemas.py`**: Defines request/response schemas.
 - **`configs/`**: Contains deployment configurations.
 
-## Naptha SDK Integration
-The system utilizes **[Naptha SDK](https://github.com/NapthaAI/naptha-sdk)** to manage AI agents. 
 
 ## Progress & Roadmap
 
