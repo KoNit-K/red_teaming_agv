@@ -57,18 +57,18 @@ class RedTeamingAgent(Agent):
                     data = json.loads(reply)
                     prompt_text = data.get("prompt", "")
 
-                    attacker_messages.append(f">>> Attacker Agent: \n{prompt_text}")
+                    attacker_messages.append(f">>> Attacker Agent: \n{prompt_text}\n")
 
                     command1 = generate_module_run("user", prompt_text, target, consumer_id)
 
                     responses = await chat_run(command1)
                     target_reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
 
-                    target_messages.append(f">>> Target Agent: \n{target_reply}")
+                    target_messages.append(f">>> Target Agent: \n{target_reply}\n")
 
                     MetricResult = evaluator.evaluate_on_topic(target_str, target_reply)
                     if MetricResult.passed:
-                        logger.info("Target Achieved!")
+                        target_messages.append("\n--- Target Achieved! ---\n")
                         break
                 except json.JSONDecodeError as e:
                     logger.warning(f"Invalid JSON response from agent: {e}")
@@ -78,65 +78,58 @@ class RedTeamingAgent(Agent):
 
     async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str):
         """Run a single red teaming test."""
-        print(f"\nTesting goal: {goal}")
 
         msg1, msg2 = await RedTeamingAgent.run_red_teaming(consumer_id, attacker, target, goal, target_str)
 
-        print("\n==== Conversation Replay ====")
+        response = ""
+        response += "\n" + "=" * 60 +"\n"
+        response += "     🎭  -- Welcome to RedTeaming Simulation --  🚀\n"
+        response += "=" * 60 + "\n"
+        response += "\n🚨🚨 Warning: This simulation is for security research & testing only! 🚨🚨\n"
+        response += "\n==== Conversation Replay ====\n"
         for i, (m1, m2) in enumerate(zip(msg1, msg2)):
-            print(f"\nRound {i + 1}:\n {m1}\n {m2}")
-        print("========== END ==========\n")
+            response += f"\nRound {i + 1}:\n {m1}\n {m2}\n"
+        response += "\n========== END ==========\n"
+        return response
 
-    async def teaming(self, target_agent: str):
-        print("\n" + "=" * 60)
-        print("     🎭  -- Welcome to RedTeaming Simulation --  🚀")
-        print("=" * 60)
-        print("\n🚨🚨 Warning: This simulation is for security research & testing only! 🚨🚨")
-
-        print_available_options()
-
+    async def teaming(self, inputs: InputSchema) -> str:
         naptha = Naptha()
+        response_ = ""
 
-        selected_config = target_agent if Target.ALLOWED_TARGETS.__contains__(target_agent) else "gpt-4o-mini"
-        print(f"\nSelected config: {selected_config}")
-        async def input_desk():
-            while True:
-                category, index, target_model = parse_user_input()
+        category, index, target_model = inputs.category, inputs.index, inputs.target
 
-                target_agent = await setup_module_deployment(
-                    "agent",
-                    "red_teaming_agv/configs/deployment.json",
-                    deployment_name=selected_config,
-                    node_url=os.getenv("NODE_URL")
-                )
+        target_agent = await setup_module_deployment(
+            "agent",
+            "red_teaming_agv/configs/deployment.json",
+            deployment_name=target_model,
+            node_url=os.getenv("NODE_URL")
+        )
 
-                attacker_agent = await setup_module_deployment(
-                    "agent",
-                    "red_teaming_agv/configs/deployment.json",
-                    deployment_name="red_teaming",
-                    node_url=os.getenv("NODE_URL")
-                )
+        attacker_agent = await setup_module_deployment(
+            "agent",
+            "red_teaming_agv/configs/deployment.json",
+            deployment_name="red_teaming",
+            node_url=os.getenv("NODE_URL")
+        )
 
-                print(f"\n📌 Starting tests:")
-                print(f"   📂  Category:     {category}")
-                print(f"   🎯  Index:        {index}")
-                print(f"   🛡  Target Model: {target_model}")
+        response_ += f"\n📌 Starting tests:\n"
+        response_ += f"   📂  Category:     {category}\n"
+        response_ += f"   🎯  Index:        {index}\n"
+        response_ += f"   🛡  Target Model: {target_model}\n"
 
-                if index.lower() == 'all':
-                    category_size = Target.get_category_size(category)
-                    for i in range(category_size):
-                        goal, target_str = Target.get_goal_target_pair(category, i)
-                        await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
-                                                              target_str)
-                else:
-                    goal, target_str = Target.get_goal_target_pair(category, int(index))
-                    print(f"\n=== Testing {goal} goal /{target_str} ===")
-                    await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
-                                                          target_str)
+        if index.lower() == 'all':
+            category_size = Target.get_category_size(category)
+            for i in range(category_size):
+                goal, target_str = Target.get_goal_target_pair(category, i)
+                response_ += await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
+                                                      target_str)
+        else:
+            goal, target_str = Target.get_goal_target_pair(category, int(index))
+            response_ += f"\n=== Testing {goal} goal /{target_str} ===\n"
+            response_ += await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
+                                                  target_str)
 
-                print("\nTest completed. You can run another test or type 'quit' to exit.")
-
-        await input_desk()
+        return response_
 
 
 async def run(module_run: Dict, *args, **kwargs):
@@ -189,7 +182,9 @@ if __name__ == "__main__":
 
     input_params = {
         "tool_name": "teaming",
-        "tool_input_data": "gpt-4o-mini",
+        "category": "financial",
+        "index": "0",
+        "target": "gpt-4o-mini",
     }
 
     module_run = {
