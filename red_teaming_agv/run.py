@@ -107,7 +107,7 @@ class RedTeamingAgent(Agent):
         attacker_agent = await setup_module_deployment(
             "agent",
             "red_teaming_agv/configs/deployment.json",
-            deployment_name="red_teaming",
+            deployment_name="red_teaming_agv",
             node_url=os.getenv("NODE_URL")
         )
 
