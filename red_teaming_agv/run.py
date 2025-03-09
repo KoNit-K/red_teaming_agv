@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import uuid
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 
 from naptha_sdk.inference import InferenceClient
@@ -14,7 +14,6 @@ from agent_instance import generate_module_run
 from chat_agent import ChatAgent
 from common.Target import Target
 from prompt import get_attacker_system_prompt
-from red_teaming_agv.helper.input_parse import print_available_options, parse_user_input
 from schemas import InputSchema, SystemPromptSchema, ChatInputSchema
 
 from adv_eva import EvaluatorAgent
@@ -144,8 +143,8 @@ async def run(module_run: Dict, *args, **kwargs):
     """
     module_run = AgentRunInput(**module_run)
     module_run.inputs = InputSchema(**module_run.inputs)
-    chat_agent = RedTeamingAgent(module_run.deployment)
-    method = getattr(chat_agent, module_run.inputs.tool_name, None)
+    red_teaming_agv = RedTeamingAgent(module_run.deployment)
+    method = getattr(red_teaming_agv, module_run.inputs.tool_name, None)
     print(f"method: {method}, inputs: {module_run.inputs}")
     return await method(module_run.inputs)
 
