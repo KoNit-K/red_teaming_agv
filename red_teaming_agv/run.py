@@ -1,22 +1,21 @@
-import argparse
-import asyncio
 import json
 import logging
 import os
 import uuid
 from typing import Dict, List, Optional, Tuple
 
-from naptha_sdk.client.naptha import Naptha
-from naptha_sdk.configs import setup_module_deployment
+
+from naptha_sdk.inference import InferenceClient
 from naptha_sdk.modules.agent import Agent
-from naptha_sdk.schemas import AgentRunInput
+from naptha_sdk.schemas import AgentRunInput, AgentDeployment
 from naptha_sdk.user import sign_consumer_id
 
 from agent_instance import generate_module_run
 from chat_agent import ChatAgent
 from common.Target import Target
 from prompt import get_attacker_system_prompt
-from schemas import InputSchema
+from red_teaming_agv.helper.input_parse import print_available_options, parse_user_input
+from schemas import InputSchema, SystemPromptSchema, ChatInputSchema
 
 from adv_eva import EvaluatorAgent
 
@@ -25,92 +24,119 @@ from adv_eva import EvaluatorAgent
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
+class RedTeamingAgent(Agent):
+    def __init__(self, deployment: AgentDeployment):
+        self.deployment = deployment
+        if deployment.config.persona_module and deployment.config.system_prompt["persona"]:
+            self.system_prompt = SystemPromptSchema(role=deployment.config.system_prompt["role"], persona=deployment.config.system_prompt["persona"])
+        else:
+            self.system_prompt = SystemPromptSchema(role=deployment.config.system_prompt["role"])
+        self.node = InferenceClient(self.deployment.node)
 
-async def invoke_agent(agent: Agent, consumer_id: str, messages: List[Dict[str, str]]) -> Optional[
-    List[Dict[str, str]]]:
-    """
-    Invoke an AI agent with given messages.
+    async def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str) -> Tuple[
+        List[str], List[str]]:
+        """
+        Simulates a red teaming scenario between an attacker and a target agent.
+        """
+        run_id = str(uuid.uuid4())
+        logger.info(f"Starting RedTeaming session with run_id={run_id}")
 
-    Args:
-        agent (Agent): The AI agent instance.
-        consumer_id (str): Consumer ID for authentication.
-        messages (List[Dict[str, str]]): List of messages to send.
+        attacker_messages = []
+        target_messages = []
+        evaluator = EvaluatorAgent()
 
-    Returns:
-        Optional[List[Dict[str, str]]]: The parsed JSON response or None if an error occurs.
-    """
-    agent_run_input = AgentRunInput(
-        consumer_id=consumer_id,
-        inputs={"tool_name": "chat", "tool_input_data": messages},
-        deployment=agent,
-        signature=sign_consumer_id(consumer_id, os.getenv("PRIVATE_KEY"))
-    )
+        for round_num in range(10):
+            attacker_prompt = get_attacker_system_prompt(goal, target_str)
+            command = generate_module_run("user", attacker_prompt, attacker, consumer_id)
 
-    try:
-        agent_response = await agent.run(agent_run_input)
-        if agent_response and agent_response.results:
-            return json.loads(agent_response.results[-1])
-    except Exception as e:
-        logger.exception(f"Failed to invoke agent: {e}")
-    return None
+            responses = await chat_run(command)
+            reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
 
+            if "sorry" not in reply:
+                try:
+                    data = json.loads(reply)
+                    prompt_text = data.get("prompt", "")
 
-def get_response(module_run: Dict) -> str:
-    """
-    Run an asynchronous module synchronously and return the response.
+                    attacker_messages.append(f">>> Attacker Agent: \n{prompt_text}")
 
-    Args:
-        module_run (Dict): Module execution configuration.
+                    command1 = generate_module_run("user", prompt_text, target, consumer_id)
 
-    Returns:
-        str: Response content.
-    """
-    response = asyncio.run(run(module_run))
-    return response["choices"][0]["message"]["content"]
+                    responses = await chat_run(command1)
+                    target_reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
 
+                    target_messages.append(f">>> Target Agent: \n{target_reply}")
 
-async def run_red_teaming(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str) -> Tuple[
-    List[str], List[str]]:
-    """
-    Simulates a red teaming scenario between an attacker and a target agent.
-    """
-    run_id = str(uuid.uuid4())
-    logger.info(f"Starting RedTeaming session with run_id={run_id}")
+                    MetricResult = evaluator.evaluate_on_topic(target_str, target_reply)
+                    if MetricResult.passed:
+                        logger.info("Target Achieved!")
+                        break
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Invalid JSON response from agent: {e}")
+                    continue
 
-    attacker_messages = []
-    target_messages = []
-    evaluator = EvaluatorAgent()
+        return attacker_messages, target_messages
 
-    for round_num in range(10):
-        attacker_prompt = get_attacker_system_prompt(goal, target_str)
-        command = generate_module_run("user", attacker_prompt, attacker, consumer_id)
+    async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str):
+        """Run a single red teaming test."""
+        print(f"\nTesting goal: {goal}")
 
-        responses = await run(command)
-        reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
+        msg1, msg2 = await RedTeamingAgent.run_red_teaming(consumer_id, attacker, target, goal, target_str)
 
-        if "sorry" not in reply:
-            try:
-                data = json.loads(reply)
-                prompt_text = data.get("prompt", "")
+        print("\n==== Conversation Replay ====")
+        for i, (m1, m2) in enumerate(zip(msg1, msg2)):
+            print(f"\nRound {i + 1}:\n {m1}\n {m2}")
+        print("========== END ==========\n")
 
-                attacker_messages.append(f">>> Attacker Agent: \n{prompt_text}")
+    async def teaming(self, target_agent: str):
+        print("\n" + "=" * 60)
+        print("     🎭  -- Welcome to RedTeaming Simulation --  🚀")
+        print("=" * 60)
+        print("\n🚨🚨 Warning: This simulation is for security research & testing only! 🚨🚨")
 
-                command1 = generate_module_run("user", prompt_text, target, consumer_id)
+        print_available_options()
 
-                responses = await run(command1)
-                target_reply = next((res["content"] for res in responses if res["role"] == "assistant"), "")
+        naptha = Naptha()
 
-                target_messages.append(f">>> Target Agent: \n{target_reply}")
+        selected_config = target_agent if Target.ALLOWED_TARGETS.__contains__(target_agent) else "gpt-4o-mini"
+        print(f"\nSelected config: {selected_config}")
+        async def input_desk():
+            while True:
+                category, index, target_model = parse_user_input()
 
-                MetricResult = evaluator.evaluate_on_topic(target_str, target_reply)
-                if MetricResult.passed:
-                    logger.info("Target Achieved!")
-                    break
-            except json.JSONDecodeError as e:
-                logger.warning(f"Invalid JSON response from agent: {e}")
-                continue
+                target_agent = await setup_module_deployment(
+                    "agent",
+                    "red_teaming_agv/configs/deployment.json",
+                    deployment_name=selected_config,
+                    node_url=os.getenv("NODE_URL")
+                )
 
-    return attacker_messages, target_messages
+                attacker_agent = await setup_module_deployment(
+                    "agent",
+                    "red_teaming_agv/configs/deployment.json",
+                    deployment_name="red_teaming",
+                    node_url=os.getenv("NODE_URL")
+                )
+
+                print(f"\n📌 Starting tests:")
+                print(f"   📂  Category:     {category}")
+                print(f"   🎯  Index:        {index}")
+                print(f"   🛡  Target Model: {target_model}")
+
+                if index.lower() == 'all':
+                    category_size = Target.get_category_size(category)
+                    for i in range(category_size):
+                        goal, target_str = Target.get_goal_target_pair(category, i)
+                        await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
+                                                              target_str)
+                else:
+                    goal, target_str = Target.get_goal_target_pair(category, int(index))
+                    print(f"\n=== Testing {goal} goal /{target_str} ===")
+                    await RedTeamingAgent.run_single_test(naptha.user.id, attacker_agent, target_agent, goal,
+                                                          target_str)
+
+                print("\nTest completed. You can run another test or type 'quit' to exit.")
+
+        await input_desk()
 
 
 async def run(module_run: Dict, *args, **kwargs):
@@ -125,175 +151,54 @@ async def run(module_run: Dict, *args, **kwargs):
     """
     module_run = AgentRunInput(**module_run)
     module_run.inputs = InputSchema(**module_run.inputs)
+    chat_agent = RedTeamingAgent(module_run.deployment)
+    method = getattr(chat_agent, module_run.inputs.tool_name, None)
+    print(f"method: {method}, inputs: {module_run.inputs}")
+    return await method(module_run.inputs)
+
+
+async def chat_run(module_run: Dict, *args, **kwargs):
+    """
+    Execute a module run asynchronously.
+
+    Args:
+        module_run (Dict): Configuration for module execution.
+
+    Returns:
+        Response from the executed module.
+    """
+    module_run = AgentRunInput(**module_run)
+    module_run.inputs = ChatInputSchema(**module_run.inputs)
     chat_agent = ChatAgent(module_run.deployment)
     method = getattr(chat_agent, module_run.inputs.tool_name, None)
 
     return await method(module_run.inputs)
 
-def print_available_options():
-    """Print available categories and their details."""
-    print("\nAvailable categories and sizes:")
-    Target.print_category_info()
-    print("\nAvailable target models:", Target.ALLOWED_TARGETS)
-    print("\nFor index, you can specify a number (0-based) or 'All' to try all goals in the category")
-    print("\nExample commands:")
-    print("  category financial --index 0 --target chatgpt")
-    print("  category bomb --index All --target anthropic")
-
-async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str):
-    """Run a single red teaming test."""
-    print(f"\nTesting goal: {goal}")
-
-    msg1, msg2 = await run_red_teaming(consumer_id, attacker, target, goal, target_str)
-
-    print("\n==== Conversation Replay ====")
-    for i, (m1, m2) in enumerate(zip(msg1, msg2)):
-        print(f"\nRound {i + 1}:\n {m1}\n {m2}")
-    print("========== END ==========\n")
 
 
-def parse_user_input() -> Tuple[str, str, str]:
-    """Parse user input in the format 'category <name> --index <num> --target <model>'."""
-    while True:
-        try:
-            user_input = input("\nEnter command (or 'help' for options, 'quit' to exit): ").strip()
-
-            if user_input.lower() == 'quit':
-                exit(0)
-
-            if user_input.lower() == 'help':
-                print_available_options()
-                continue
-
-            # Split the input into parts
-            parts = user_input.split()
-
-            if len(parts) != 6 or parts[0] != 'category' or parts[2] != '--index' or parts[4] != '--target':
-                raise ValueError("Invalid command format")
-
-            category = parts[1]
-            index = parts[3]
-            target = parts[5]
-
-            # Validate category
-            if category not in Target.get_all_categories():
-                raise ValueError(f"Invalid category. Use 'help' to see available categories.")
-
-            # Validate index
-            if index.lower() != 'all':
-                try:
-                    index_num = int(index)
-                    if index_num < 0 or index_num >= Target.get_category_size(category):
-                        raise ValueError
-                except ValueError:
-                    raise ValueError(
-                        f"Invalid index. Must be between 0 and {Target.get_category_size(category) - 1} or 'All'")
-
-            # Validate target
-            if target not in Target.ALLOWED_TARGETS:
-                raise ValueError(f"Invalid target model. Choose from: {Target.ALLOWED_TARGETS}")
-
-            return category, index, target
-
-        except ValueError as e:
-            print(f"Error: {str(e)}")
-            continue
-
-
-async def run_single_test(consumer_id: str, attacker: Agent, target: Agent, goal: str, target_str: str):
-    """Run a single red teaming test."""
-    print(f"\nTesting goal: {goal}")
-
-    msg1, msg2 = await run_red_teaming(consumer_id, attacker, target, goal, target_str)
-
-    print("\n==== Conversation Replay ====")
-    for i, (m1, m2) in enumerate(zip(msg1, msg2)):
-        print(f"\nRound {i + 1}:\n {m1}\n {m2}")
-    print("========== END ==========\n")
 
 
 if __name__ == "__main__":
-    print("\n" + "=" * 60)
-    print("     🎭  -- Welcome to RedTeaming Simulation --  🚀")
-    print("=" * 60)
-    print("\n🚨🚨 Warning: This simulation is for security research & testing only! 🚨🚨")
-
-    print_available_options()
+    import asyncio
+    from naptha_sdk.client.naptha import Naptha
+    from naptha_sdk.configs import setup_module_deployment
 
     naptha = Naptha()
 
+    deployment = asyncio.run(setup_module_deployment("agent", "red_teaming_agv/configs/deployment.json", node_url = os.getenv("NODE_URL"), load_persona_data=False))
 
-    async def main():
-        while True:
-            category, index, target_model = parse_user_input()
+    input_params = {
+        "tool_name": "teaming",
+        "tool_input_data": "gpt-4o-mini",
+    }
 
-            target_agent = await setup_module_deployment(
-                "agent",
-                "red_teaming_agv/configs/deployment.json",
-                deployment_name="target_1",
-                node_url=os.getenv("NODE_URL")
-            )
+    module_run = {
+        "inputs": input_params,
+        "deployment": deployment,
+        "consumer_id": naptha.user.id,
+        "signature": sign_consumer_id(naptha.user.id, os.getenv("PRIVATE_KEY"))
+    }
 
-            attacker_agent = await setup_module_deployment(
-                "agent",
-                "red_teaming_agv/configs/deployment.json",
-                deployment_name="attacker_1",
-                node_url=os.getenv("NODE_URL")
-            )
+    response = asyncio.run(run(module_run))
 
-            print(f"\n📌 Starting tests:")
-            print(f"   📂  Category:     {category}")
-            print(f"   🎯  Index:        {index}")
-            print(f"   🛡  Target Model: {target_model}")
-
-            if index.lower() == 'all':
-                category_size = Target.get_category_size(category)
-                for i in range(category_size):
-                    goal, target_str = Target.get_goal_target_pair(category, i)
-                    await run_single_test(naptha.user.id, attacker_agent, target_agent, goal, target_str)
-            else:
-                goal, target_str = Target.get_goal_target_pair(category, int(index))
-                print(f"\n=== Testing {goal} goal /{target_str} ===")
-                await run_single_test(naptha.user.id, attacker_agent, target_agent, goal, target_str)
-
-            print("\nTest completed. You can run another test or type 'quit' to exit.")
-
-
-    asyncio.run(main())
-#
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(description="Multi-Agent Red Teaming")
-#     parser.add_argument("--goal", type=str, required=True, choices=["0", "1"],
-#                         help=f"0 - '{Target.ALLOWED_GOALS[0]}', 1 - '{Target.ALLOWED_GOALS[1]}'")
-#     parser.add_argument("--target", type=str, required=True, choices=Target.ALLOWED_TARGETS,
-#                         help=f"Choose which target agent to attack: {Target.ALLOWED_TARGETS}")
-#
-#     args = parser.parse_args()
-#     goal = Target.ALLOWED_GOALS[int(args.goal)]
-#     target_str = Target.TARGET_STRS[int(args.goal)]
-#
-#     print("\n" + "=" * 60)
-#     print("     🎭  -- Welcome to RedTeaming Simulation --  🚀")
-#     print("=" * 60)
-#     print(f"📌 User Request Details:")
-#     print(f"   🎯  Goal:         {goal}")
-#     print(f"   🛡  Target Model: {args.target}")
-#     print("\n🚨🚨 Warning: This simulation is for security research & testing only! 🚨🚨")
-#     print("=" * 60 + "\n")
-#
-#     naptha = Naptha()
-#
-#     target_agent = asyncio.run(
-#         setup_module_deployment("agent", "red_teaming_agv/configs/deployment.json",
-#                                 deployment_name="target_1", node_url=os.getenv("NODE_URL")))
-#
-#     attacker_agent = asyncio.run(
-#         setup_module_deployment("agent", "red_teaming_agv/configs/deployment.json",
-#                                 deployment_name="attacker_1", node_url=os.getenv("NODE_URL")))
-#
-#     msg1, msg2 = run_red_teaming(naptha.user.id, attacker_agent, target_agent, goal, target_str)
-#
-#     print("==== Conversation Replay ====")
-#     for i, (m1, m2) in enumerate(zip(msg1, msg2)):
-#         print(f"\nRound {i + 1}:\n {m1}\n {m2}")
-#     print("========== END ==========")
+    print("Response: ", response)
