@@ -90,14 +90,15 @@ class EvaluatorAgent:
 
         for _ in range(20):
             try:
-                response = openai.ChatCompletion.create(
+                client = openai.OpenAI(api_key=self.api_key)
+                response = client.chat.completions.create(
                     model=self.config.model,
                     messages=messages,
                     max_tokens=self.config.max_tokens,
-                    temperature=self.config.temperature,
-                    request_timeout=20
+                    temperature=self.config.temperature
                 )
-                return response["choices"][0]["message"]["content"]
+                return response.choices[0].message.content
+
             except Exception as e:
                 logger.error(f"API error: {str(e)}")
                 time.sleep(10)
@@ -211,3 +212,8 @@ class EvaluatorAgent:
         self.metrics_config.hallucination = False
         self.metrics_config.on_topic = False
         self.needs_gpt = False
+
+
+
+
+
