@@ -1,9 +1,9 @@
 [
     {
-        "name": "red_teaming",
+        "name": "red_teaming_agv",
         "module":
         {
-           "name": "red_teaming",
+           "name": "red_teaming_agv",
            "description": "A Automatic AI Red-Teaming Framework that simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms.",
            "parameters": "{category: str, index: str, target: str}",
            "module_type": "agent",
