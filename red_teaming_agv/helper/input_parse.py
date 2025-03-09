@@ -2,7 +2,7 @@ from typing import Tuple
 
 from red_teaming_agv.common.Target import Target
 
-
+# deprecated
 def print_available_options():
     """Print available categories and their details."""
     print("\nAvailable categories and sizes:")
@@ -15,7 +15,7 @@ def print_available_options():
 
 
 
-
+# deprecated
 def parse_user_input() -> Tuple[str, str, str]:
     """Parse user input in the format 'category <name> --index <num> --target <model>'."""
     while True:
