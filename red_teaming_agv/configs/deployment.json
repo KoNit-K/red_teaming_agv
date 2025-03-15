@@ -7,7 +7,7 @@
            "description": "A Automatic AI Red-Teaming Framework that simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms.",
            "parameters": "{category: str, index: str, target: str}",
            "module_type": "agent",
-           "module_version": "v0.24",
+           "module_version": "v0.25",
            "module_entrypoint": "run.py",
            "execution_type": "package"
         },
