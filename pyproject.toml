@@ -1,7 +1,7 @@
 [project]
 name = "red_teaming_agv"
-version = "0.20"
-description = "A red teaming agent project"
+version = "0.21"
+description = "A Automatic AI Red-Teaming Framework that simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms."
 authors = [
     {name = "konit", email = "konit.block@protonmail.com"}
 ]
