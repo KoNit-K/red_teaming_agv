@@ -1,6 +1,6 @@
 [project]
 name = "red_teaming_agv"
-version = "0.21"
+version = "0.22"
 description = "A Automatic AI Red-Teaming Framework that simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms."
 authors = [
     {name = "konit", email = "konit.block@protonmail.com"}
@@ -14,7 +14,6 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
 include = ["red_teaming_agv"]
 
 [build-system]

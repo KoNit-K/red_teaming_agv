@@ -1,7 +1,7 @@
 from typing import Dict, Optional, Union
 from pydantic import BaseModel, Field, field_validator
 from typing import ClassVar
-from common.Target import Target
+from red_teaming_agv.common.Target import Target
 
 class ChatInputSchema(BaseModel):
     tool_name: str
