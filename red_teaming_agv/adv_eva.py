@@ -23,7 +23,7 @@ class MetricConfig:
     """Basic configuration"""
     threshold: float = 0.7
     max_tokens: int = 1500
-    temperature: float = 0.7
+    temperature: float = 0.3
     model: str = "gpt-4o-mini"
 
 
