@@ -1,18 +1,22 @@
-[tool.poetry]
-name = "red-teaming agent"
-version = "0.1.0"
-description = ""
-authors = ["Konit <Konit.block@protonmail.com>"]
+[project]
+name = "red_teaming_agv"
+version = "0.20"
+description = "A red teaming agent project"
+authors = [
+    {name = "konit", email = "konit.block@protonmail.com"}
+]
 readme = "README.md"
-packages = [
-    { include = "red_teaning", from = "." },
+requires-python = ">=3.10,<=3.13"
+dependencies = [
+    "pydantic>=2.6.1",
+    "openai>=1.66.3",
+    "naptha-sdk @ git+https://github.com/NapthaAI/naptha-sdk.git"
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<=3.13"
-pydantic = "^2.6.1"
-naptha-sdk = {git = "https://github.com/NapthaAI/naptha-sdk.git"}
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["red_teaming_agv"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
