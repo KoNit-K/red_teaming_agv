@@ -10,12 +10,12 @@ from naptha_sdk.modules.agent import Agent
 from naptha_sdk.schemas import AgentRunInput, AgentDeployment
 from naptha_sdk.user import sign_consumer_id
 
-from chat_agent import ChatAgent
-from common.Target import Target
-from prompt import get_attacker_system_prompt
-from schemas import InputSchema, SystemPromptSchema, ChatInputSchema
+from red_teaming_agv.chat_agent import ChatAgent
+from red_teaming_agv.common.Target import Target
+from red_teaming_agv.prompt import get_attacker_system_prompt
+from red_teaming_agv.schemas import InputSchema, SystemPromptSchema, ChatInputSchema
 
-from adv_eva import EvaluatorAgent
+from red_teaming_agv.adv_eva import EvaluatorAgent
 
 
 # Configure logging
