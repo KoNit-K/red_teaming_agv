@@ -1,6 +1,6 @@
 [project]
 name = "red_teaming_agv"
-version = "0.23"
+version = "0.24"
 description = "A Automatic AI Red-Teaming Framework that simulate adversarial attacks on AI agents to evaluate their robustness and response mechanisms."
 authors = [
     {name = "konit", email = "konit.block@protonmail.com"}
@@ -8,13 +8,17 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10,<=3.13"
 dependencies = [
-    "pydantic>=2.6.1",
+    "naptha-sdk",
     "openai>=1.66.3",
-    "naptha-sdk @ git+https://github.com/NapthaAI/naptha-sdk.git"
+    "pydantic>=2.10.6",
 ]
 
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["red_teaming_agv"]
+
+[tool.uv.sources]
+naptha-sdk = { git = "https://github.com/NapthaAI/naptha-sdk.git" }
 
 [build-system]
 requires = ["setuptools>=61.0"]
