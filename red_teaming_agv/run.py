@@ -4,7 +4,8 @@ import os
 import uuid
 from typing import Dict, List, Tuple
 
-
+from naptha_sdk.client.naptha import Naptha
+from naptha_sdk.configs import setup_module_deployment
 from naptha_sdk.inference import InferenceClient
 from naptha_sdk.modules.agent import Agent
 from naptha_sdk.schemas import AgentRunInput, AgentDeployment
