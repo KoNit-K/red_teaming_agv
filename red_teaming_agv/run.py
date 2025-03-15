@@ -214,33 +214,3 @@ async def chat_run(module_run: Dict, *args, **kwargs):
 
     return await method(module_run.inputs)
 
-
-
-
-
-if __name__ == "__main__":
-    import asyncio
-    from naptha_sdk.client.naptha import Naptha
-    from naptha_sdk.configs import setup_module_deployment
-
-    naptha = Naptha()
-
-    deployment = asyncio.run(setup_module_deployment("agent", "red_teaming_agv/configs/deployment.json", node_url = os.getenv("NODE_URL"), load_persona_data=False))
-
-    input_params = {
-        "tool_name": "teaming",
-        "category": "financial",
-        "index": "0",
-        "target": "gpt-4o-mini",
-    }
-
-    module_run = {
-        "inputs": input_params,
-        "deployment": deployment,
-        "consumer_id": naptha.user.id,
-        "signature": sign_consumer_id(naptha.user.id, os.getenv("PRIVATE_KEY"))
-    }
-
-    response = asyncio.run(run(module_run))
-
-    print("Response: ", response)
